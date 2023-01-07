@@ -1,4 +1,4 @@
-const {GuildMember, ApplicationCommandOptionType} = require('discord.js');
+const {GuildMember} = require('discord.js');
 const {QueueRepeatMode} = require('discord-player');
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
   options: [
     {
       name: 'mode',
-      type: ApplicationCommandOptionType.Integer,
+      type: 'INTEGER',
       description: 'Loop type',
       required: true,
       choices: [
@@ -34,17 +34,17 @@ module.exports = {
     try {
       if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
         return void interaction.reply({
-          content: 'You are not in a voice channel!',
+          content: 'Você não está em um canal de voz!!😼!',
           ephemeral: true,
         });
       }
 
       if (
-        interaction.guild.members.me.voice.channelId &&
-        interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId
+        interaction.guild.me.voice.channelId &&
+        interaction.member.voice.channelId !== interaction.guild.me.voice.channelId
       ) {
         return void interaction.reply({
-          content: 'You are not in my voice channel!',
+          content: 'Você não está em um canal de voz!!😼!',
           ephemeral: true,
         });
       }
@@ -53,20 +53,20 @@ module.exports = {
 
       const queue = player.getQueue(interaction.guildId);
       if (!queue || !queue.playing) {
-        return void interaction.followUp({content: '❌ | No music is being played!'});
+        return void interaction.followUp({content: '❌ | Nenhuma música tocando 😿 '});
       }
 
-      const loopMode = interaction.options.getInteger('mode');
+      const loopMode = interaction.options.get('mode').value;
       const success = queue.setRepeatMode(loopMode);
       const mode = loopMode === QueueRepeatMode.TRACK ? '🔂' : loopMode === QueueRepeatMode.QUEUE ? '🔁' : '▶';
 
       return void interaction.followUp({
-        content: success ? `${mode} | Updated loop mode!` : '❌ | Could not update loop mode!',
+        content: success ? `${mode} | Updated loop mode!` : '❌ | Erro modo loop!',
       });
     } catch (error) {
       console.log(error);
       interaction.followUp({
-        content: 'There was an error trying to execute that command: ' + error.message,
+        content: 'Ops! Teve um erro executando esse.. ' + error.message,
       });
     }
   },
