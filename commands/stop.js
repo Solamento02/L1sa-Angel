@@ -6,17 +6,17 @@ module.exports = {
   async execute(interaction, player) {
     if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
       return void interaction.reply({
-        content: 'You are not in a voice channel!',
+        content: 'Você não está em um canal de voz!!😼!',
         ephemeral: true,
       });
     }
 
     if (
-      interaction.guild.members.me.voice.channelId &&
-      interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId
+      interaction.guild.me.voice.channelId &&
+      interaction.member.voice.channelId !== interaction.guild.me.voice.channelId
     ) {
       return void interaction.reply({
-        content: 'You are not in my voice channel!',
+        content: 'Você não está em um canal de voz!!😼!',
         ephemeral: true,
       });
     }
@@ -25,9 +25,9 @@ module.exports = {
     const queue = player.getQueue(interaction.guildId);
     if (!queue || !queue.playing)
       return void interaction.followUp({
-        content: '❌ | No music is being played!',
+        content: '❌ | Sem músicas!',
       });
     queue.destroy();
-    return void interaction.followUp({content: '🛑 | Stopped the player!'});
+    return void interaction.followUp({content: '🛑 | Ok!Okay parei de arranhar seu sofá!😾'});
   },
 };
