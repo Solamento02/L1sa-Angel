@@ -1,4 +1,4 @@
-const {GuildMember, ApplicationCommandOptionType } = require('discord.js');
+const {GuildMember} = require('discord.js');
 const {QueryType} = require('discord-player');
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
   options: [
     {
       name: 'query',
-      type: ApplicationCommandOptionType.String,
+      type: 3, // 'STRING' Type
       description: 'The song you want to play',
       required: true,
     },
@@ -16,24 +16,24 @@ module.exports = {
     try {
       if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
         return void interaction.reply({
-          content: 'You are not in a voice channel!',
+          content: 'Você não está em um canal de voz!!😼',
           ephemeral: true,
         });
       }
 
       if (
-        interaction.guild.members.me.voice.channelId &&
-        interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId
+        interaction.guild.me.voice.channelId &&
+        interaction.member.voice.channelId !== interaction.guild.me.voice.channelId
       ) {
         return void interaction.reply({
-          content: 'You are not in my voice channel!',
+          content: 'Você não está em um canal de voz!!😼!',
           ephemeral: true,
         });
       }
 
       await interaction.deferReply();
 
-      const query = interaction.options.getString('query');
+      const query = interaction.options.get('query').value;
       const searchResult = await player
         .search(query, {
           requestedBy: interaction.user,
@@ -41,13 +41,13 @@ module.exports = {
         })
         .catch(() => {});
       if (!searchResult || !searchResult.tracks.length)
-        return void interaction.followUp({content: 'No results were found!'});
+        return void interaction.followUp({content: 'Sem resultados..❌'});
 
       const queue = await player.createQueue(interaction.guild, {
         ytdlOptions: {
 				quality: "highest",
 				filter: "audioonly",
-				highWaterMark: 1 << 30,
+				highWaterMark: 1 << 25,
 				dlChunkSize: 0,
 			},
         metadata: interaction.channel,
@@ -58,19 +58,19 @@ module.exports = {
       } catch {
         void player.deleteQueue(interaction.guildId);
         return void interaction.followUp({
-          content: 'Could not join your voice channel!',
+          content: 'Não consegui entrar no seu canal de voz😼',
         });
       }
 
       await interaction.followUp({
-        content: `⏱ | Loading your ${searchResult.playlist ? 'playlist' : 'track'}...`,
+        content: `⏱ | Carregando.. 🐈 ${searchResult.playlist ? 'playlist' : 'track'}...`,
       });
       searchResult.playlist ? queue.addTracks(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
       if (!queue.playing) await queue.play();
     } catch (error) {
       console.log(error);
       interaction.followUp({
-        content: 'There was an error trying to execute that command: ' + error.message,
+        content: 'Ops!🙀 Ocorreu um erro ao executar --> ' + error.message,
       });
     }
   },
