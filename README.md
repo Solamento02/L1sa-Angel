@@ -1,4 +1,4 @@
-#Discord Music bot
+# Bot de música inspirado na minha gatinha, Lisa 
 
 Eu comecei a mexer com vários códigos de bots de música diferentes, mas esse foi um dos primeiros que eu mais gostei de ter visto. Com ele eu aprendi bastante sobre como funcionam os comandos em slash, e dependências de Bots aprofundando muito do meu conhecimento.
 Enfim, chega de falar sobre mim eu vou só falar das dependências sobre:
