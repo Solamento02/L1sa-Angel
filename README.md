@@ -2,7 +2,7 @@
 
 Eu comecei a mexer com vários códigos de bots de música diferentes, mas esse foi um dos primeiros que eu mais gostei de ter visto. Com ele eu aprendi bastante sobre como funcionam os comandos em slash, e dependências de Bots aprofundando muito do meu conhecimento.
 Enfim, chega de falar sobre mim eu vou só falar das dependências sobre:
-Feito em Node na versão 16, mas também pode ser utilizada em Node versão 18
-Tendo depedências sendo:
-@discordjs/opus | discord-player | discord.js | ffmpeg | ffmpeg-static | fluent-ffmpeg | ytdl-core
-Para executar ele em seu computador é só utilizar o comando "npm i" ou "npm install", para exportar os comandos slash usar "!deploy" e pronto! só executar usando: "node.index.js"
+> Feito em Node na versão 16, mas também pode ser utilizada em Node versão 18
+ >Tendo depedências sendo:
+ * @discordjs/opus | discord-player | discord.js | ffmpeg | ffmpeg-static | fluent-ffmpeg | ytdl-core
+>Para executar ele em seu computador é só utilizar o comando  "npm i" ou "npm install" para exportar os comandos slash usar "!deploy" só executar usando: "node.index.js"
