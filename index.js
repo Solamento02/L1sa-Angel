@@ -1,17 +1,15 @@
-require('dotenv').config()
-
 const fs = require('fs');
 const Discord = require('discord.js');
-const Client = require('./client/Client');
-const config = require('./config.json');
+const Client = require('./Client/client.js');
 const {Player} = require('discord-player');
-
-const { ActivityType } = require('discord.js');
+const config = require('./config.json');
+const prefix = "*"
 
 const client = new Client();
 client.commands = new Discord.Collection();
-
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const clientId = "seu clientId";
+const guildId = "seu guildId";
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
@@ -20,45 +18,61 @@ for (const file of commandFiles) {
 
 console.log(client.commands);
 
+client.on('messageCreate', async (msg) => {
+  if(msg.content === prefix + 'Hey'){
+    await msg.channel.send("Hey ' + msg.author.username");
+  }
+})
+
+client.on('messageCreate', async (msg) => {
+  if(msg.content === prefix + 'ping'){
+       await msg.channel.send(`Pong! 🏓 ${Math.round(client.ws.ping)} ms `)
+  }
+});
+
+client.on('messageCreate', async (msg) => {
+  if(msg.content === prefix + 'teste'){
+    await msg.channel.send("teste")
+  }
+});
+
 const player = new Player(client);
 
 player.on('error', (queue, error) => {
-  console.log(`[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
+  console.log(`[${queue.guild.name}] Erro na fila😳 ${error.message}`);
 });
 
 player.on('connectionError', (queue, error) => {
-  console.log(`[${queue.guild.name}] Error emitted from the connection: ${error.message}`);
+  console.log(`[${queue.guild.name}] Erro na conexão😳 ${error.message}`);
 });
 
 player.on('trackStart', (queue, track) => {
-  queue.metadata.send(`▶ | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
+  queue.metadata.send(`▶ | Começou a tocar 😸 **${track.title}** 🎶 **${queue.connection.channel.name}**!`);
 });
 
 player.on('trackAdd', (queue, track) => {
-  queue.metadata.send(`🎶 | Track **${track.title}** queued!`);
+  queue.metadata.send(`🎶 | Música **${track.title}** adicionada a fila!😸`);
 });
 
 player.on('botDisconnect', queue => {
-  queue.metadata.send('❌ | I was manually disconnected from the voice channel, clearing queue!');
+  queue.metadata.send(' 😿 | Fui desconectada do chat de voz..');
 });
 
 player.on('channelEmpty', queue => {
-  queue.metadata.send('❌ | Nobody is in the voice channel, leaving...');
+  queue.metadata.send('😿 | Não tem ninguém aqui..');
 });
 
 player.on('queueEnd', queue => {
-  queue.metadata.send('✅ | Queue finished!');
+  queue.metadata.send('✅ | Sem mais músicas! Urf, urf🐈');
 });
 
-client.once('ready', async () => {
-  console.log('Ready!');
+client.on("ready", () => {
+  console.log(`Bot foi iniciado com sucesso, estou com ${client.users.cache.size} usuários online, em ${client.channels.cache.size} canais,  em ${client.guilds.cache.size} servidores`);
+  client.user.setActivity(`Hey! Sou a Lisa e estou em ${client.guilds.cache.size} servidores! 😸`);
 });
 
-client.on('ready', function() {
-  client.user.setPresence({
-    activities: [{ name: config.activity, type: Number(config.activityType) }],
-    status: Discord.PresenceUpdateStatus.Online,
-  });
+client.on("ready", () => {
+  console.log(`Prontinho!!Meooow..Logado como ${client.user.tag}😸`);
 });
 
 client.once('reconnecting', () => {
@@ -69,18 +83,15 @@ client.once('disconnect', () => {
   console.log('Disconnect!');
 });
 
-client.on('messageCreate', async message => {
-  if (message.author.bot || !message.guild) return;
-  if (!client.application?.owner) await client.application?.fetch();
-
-  if (message.content === '!deploy' && message.author.id === client.application?.owner?.id) {
-    await message.guild.commands
+client.on('messageCreate', async (msg) => {
+  if (msg.content === '!deploy'){
+    await msg.guild.commands
       .set(client.commands)
       .then(() => {
-        message.reply('Deployed!');
+        msg.reply('Deployed!');
       })
       .catch(err => {
-        message.reply('Could not deploy commands! Make sure the bot has the application.commands permission!');
+        msg.reply('Não deu o deploy😿');
         console.error(err);
       });
   }
@@ -90,7 +101,7 @@ client.on('interactionCreate', async interaction => {
   const command = client.commands.get(interaction.commandName.toLowerCase());
 
   try {
-    if (interaction.commandName == 'ban' || interaction.commandName == 'userinfo') {
+    if ( interaction.commandName == 'userinfo') {
       command.execute(interaction, client);
     } else {
       command.execute(interaction, player);
@@ -98,9 +109,9 @@ client.on('interactionCreate', async interaction => {
   } catch (error) {
     console.error(error);
     interaction.followUp({
-      content: 'There was an error trying to execute that command!',
+      content: 'Opa! Deu erro😳',
     });
   }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(config.token);
