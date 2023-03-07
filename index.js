@@ -97,21 +97,4 @@ client.on('messageCreate', async (msg) => {
   }
 });
 
-client.on('interactionCreate', async interaction => {
-  const command = client.commands.get(interaction.commandName.toLowerCase());
-
-  try {
-    if ( interaction.commandName == 'userinfo') {
-      command.execute(interaction, client);
-    } else {
-      command.execute(interaction, player);
-    }
-  } catch (error) {
-    console.error(error);
-    interaction.followUp({
-      content: 'Opa! Deu erro😳',
-    });
-  }
-});
-
 client.login(config.token);
